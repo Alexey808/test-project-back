@@ -1,20 +1,26 @@
 import {Get, HttpException, Injectable} from '@nestjs/common';
 import { User } from 'src/entity/users/user.interface';
 import { mockUsers } from 'src/entity/users/users.mock';
+import {InjectModel} from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
   // private readonly users: User[] = [];
   users = mockUsers;
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<User>,
+  ) {}
 
   create(user: User) {
     this.users.push(user);
   }
 
-  getUsers(): Promise<any> {
-    return new Promise(resolve => {
-      resolve(this.users);
-    });
+  async getUsers(): Promise<User[]> {
+    return await this.userModel.find().exec();
+    // return new Promise(resolve => {
+    //   resolve(this.users);
+    // });
   }
 
   getUser(userId): Promise<any> {
@@ -34,8 +40,10 @@ export class UsersService {
       name: user.name,
     };
 
+    const addUser = new this.userModel(dataUser);
+
     return new Promise(resolve => {
-      this.users.push(dataUser);
+      this.users.push(addUser);
       resolve(this.users);
     });
   }
