@@ -47,3 +47,10 @@ $ npm run test:cov
 `nest g co /controllers/entities`  
 `nest g service /service/fileName`  
 `nest g module /module/fileName` 
+
+https://scotch.io/tutorials/getting-started-with-nestjs
+http://localhost:3000/users
+
+POST http://localhost:3000/users
+Body x-www-form-urlencoded
+ 
