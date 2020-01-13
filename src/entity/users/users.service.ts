@@ -58,9 +58,7 @@ export class UsersService {
   }
 
   async updateUser(user: User): Promise<User[]> {
-    console.log('service --->>> ', user);
-    const dataUser = await this.userModel.collection.updateOne({id: Number(user.id)}, {$set: user});
-    //console.log(dataUser);
+    const dataUser = await this.userModel.collection.updateOne({id: user.id}, {$set: user});
 
     return new Promise(resolve => {
       this.users.push(dataUser);
