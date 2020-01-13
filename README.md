@@ -48,14 +48,23 @@ $ npm run test:cov
 `nest g service /service/fileName`  
 `nest g module /module/fileName` 
 
---- Проверка
+#### Небольшой туториал
 https://scotch.io/tutorials/getting-started-with-nestjs
 
-Postman (пример)
-POST http://localhost:3000/users
-Body x-www-form-urlencoded
+#### Postman (примеры)
+GET all - http://localhost:3000/users
 
---- Работа с БД
+GET one - http://localhost:3000/users/1
+
+DELETE - http://localhost:3000/users?userId=2
+
+POST add one- http://localhost:3000/users
+body: id=8, name=test8
+
+PUT only - http://localhost:3000/users/id=8
+body: id=8, name=test8
+
+#### Работа с БД
 sudo service mongod start
 
  
