@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-
 // import mongoose from 'mongoose';
 // mongoose.connect('mongodb://localhost/nest-test-project-db')
 
