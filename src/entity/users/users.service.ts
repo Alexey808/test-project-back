@@ -2,6 +2,8 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { User } from 'src/entity/users/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { wrapPromise } from '../../tools/wrap-promise';
+import { generateId } from '../../tools/geterate-id';
 
 @Injectable()
 export class UsersService {
@@ -11,40 +13,38 @@ export class UsersService {
     @InjectModel('User') private readonly userModel: Model<User>,
   ) {}
 
-  getUsers(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async getUsers(): Promise<User[]> {
+    const users = await this.userModel.find({}, {_id: 0});
+
+    console.log('getUsers() -> users -> ', users);
+
+    return wrapPromise(users);
   }
 
-  async getUser(userId): Promise<User> {
-    const id = Number(userId);
+  async getUser(id: string): Promise<User> {
+    console.log('------------>', id);
+    const userFind = await this.userModel.findOne({id}, {_id: 0});
 
-    const userFind = await this.userModel.collection.findOne({id});
+    console.log('getUser(id) -> user -> ', userFind);
 
-    return new Promise(resolve => {
-      if (!userFind) {
-        throw new HttpException('User does noe exist!', 404);
-      }
-      resolve(userFind);
-    });
+    return wrapPromise(userFind);
   }
 
-  async addUser(user: User): Promise<User[]> {
+  async addUser(user: User) {
     const dataUser = {
-      id: Number(user.id),
+      id: generateId(),
       name: user.name,
     };
 
+    console.log('addUser(..) -> user -> ', dataUser);
+    // разобраться почему не доабвляются id в бд
     await this.userModel.collection.insertOne(dataUser);
-
-    return new Promise(resolve => {
-      this.users.push(dataUser);
-      resolve(this.users);
-    });
+    const users = await this.userModel.find({}, {_id: 0});
+    console.log('addUser(..) -> users -> ', users);
+    return wrapPromise(users);
   }
 
-  async deleteUser(userId): Promise<User[]> {
-    const id = Number(userId);
-
+  async deleteUser(id): Promise<User[]> {
     await this.userModel.collection.deleteOne({id});
 
     return new Promise(resolve => {
