@@ -15,18 +15,13 @@ export class UsersService {
 
   async getUsers(): Promise<User[]> {
     const users = await this.userModel.find({}, {_id: 0});
-
     console.log('getUsers() -> users -> ', users);
-
     return wrapPromise(users);
   }
 
   async getUser(id: string): Promise<User> {
-    console.log('------------>', id);
     const userFind = await this.userModel.findOne({id}, {_id: 0});
-
-    console.log('getUser(id) -> user -> ', userFind);
-
+    console.log('getUser(id) -> user -> ', userFind, ' id -> ', id);
     return wrapPromise(userFind);
   }
 
@@ -37,7 +32,6 @@ export class UsersService {
     };
 
     console.log('addUser(..) -> user -> ', dataUser);
-    // разобраться почему не доабвляются id в бд
     await this.userModel.collection.insertOne(dataUser);
     const users = await this.userModel.find({}, {_id: 0});
     console.log('addUser(..) -> users -> ', users);
