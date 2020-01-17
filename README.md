@@ -52,17 +52,17 @@ $ npm run test:cov
 https://scotch.io/tutorials/getting-started-with-nestjs
 
 #### Postman (примеры)
-GET all - http://localhost:3000/users
+GET all - http://localhost:3000/api/users
 
-GET one - http://localhost:3000/users/1
+GET one - http://localhost:3000/api/users/1
 
-DELETE - http://localhost:3000/users?userId=2
+DELETE - http://localhost:3000/api/users?id=1
 
-POST add one- http://localhost:3000/users
-body: id=8, name=test8
+POST add one- http://localhost:3000/api/users
+body: name=test8
 
-PUT only - http://localhost:3000/users/id=8
-body: id=8, name=test8
+PUT only - http://localhost:3000/api/users/1 (остальное в body)
+body: name=test8
 
 #### Работа с БД
 sudo service mongod start

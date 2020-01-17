@@ -15,13 +15,11 @@ export class UsersService {
 
   async getUsers(): Promise<User[]> {
     const users = await this.userModel.find({}, {_id: 0});
-    console.log('getUsers() -> users -> ', users);
     return wrapPromise(users);
   }
 
   async getUser(id: string): Promise<User> {
     const userFind = await this.userModel.findOne({id}, {_id: 0});
-    console.log('getUser(id) -> user -> ', userFind, ' id -> ', id);
     return wrapPromise(userFind);
   }
 
@@ -31,32 +29,20 @@ export class UsersService {
       name: user.name,
     };
 
-    console.log('addUser(..) -> user -> ', dataUser);
     await this.userModel.collection.insertOne(dataUser);
     const users = await this.userModel.find({}, {_id: 0});
-    console.log('addUser(..) -> users -> ', users);
     return wrapPromise(users);
   }
 
-  async deleteUser(id): Promise<User[]> {
+  async deleteUser(id: string): Promise<User[]> {
     await this.userModel.collection.deleteOne({id});
-
-    return new Promise(resolve => {
-      const index = this.users.findIndex(user => user.id === id);
-      if (index === -1) {
-        throw new HttpException('User does not exist!', 404);
-      }
-      this.users.splice(1, index);
-      resolve(this.users);
-    });
+    const users = await this.userModel.find({}, {_id: 0});
+    return wrapPromise(users);
   }
 
-  async updateUser(user: User): Promise<User[]> {
-    const dataUser = await this.userModel.collection.updateOne({id: user.id}, {$set: user});
-
-    return new Promise(resolve => {
-      this.users.push(dataUser);
-      resolve(this.users);
-    });
+  async updateUser(id: string, user: User): Promise<User[]> {
+    await this.userModel.collection.updateOne({id}, {$set: user});
+    const users = await this.userModel.find({}, {_id: 0});
+    return wrapPromise(users);
   }
 }

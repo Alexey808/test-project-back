@@ -1,6 +1,6 @@
-import {Body, Controller, Delete, Get, Post, Param, Query, Put} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Param, Query, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { UserDTO } from './dto/create-user.dto';
 
 @Controller('api/users')
 export class UsersController {
@@ -8,41 +8,28 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
-  @Get()
-  async getUsers() {
-    const users = await this.usersService.getUsers();
-    return users;
+  @Get(':id')
+  async getUser(@Param('id') userId) {
+    return await this.usersService.getUser(userId);
   }
 
-  @Get(':userId')
-  async getUser(@Param('userId') userId) {
-    const user = await this.usersService.getUser(userId);
-    return user;
+  @Get()
+  async getUsers() {
+    return await this.usersService.getUsers();
   }
 
   @Post()
-  async addUser(@Body() createUserDTO: CreateUserDTO) {
-    const user = await this.usersService.addUser(createUserDTO);
-    return user;
+  async addUser(@Body() createUserDTO: UserDTO) {
+    return await this.usersService.addUser(createUserDTO);
   }
 
   @Delete()
   async deleteUser(@Query() query) {
-    const users = await this.usersService.deleteUser(query.userId);
-    return users;
+    return await this.usersService.deleteUser(query.id);
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDTO) {
-    const user = await this.usersService.updateUser(updateUserDTO);
-    return user;
+  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO) {
+    return await this.usersService.updateUser(id, updateUserDTO);
   }
-
-  // @Put()
-  // async updateUser(@Body() updateUserDTO) {
-  //   console.log('controller update updateUserDTO -> ', updateUserDTO);
-  //   const user = await this.usersService.updateUser(updateUserDTO);
-  //   console.log('controller update user -> ', user);
-  //   return user;
-  // }
 }
