@@ -23,15 +23,15 @@ export class UsersService {
     return wrapPromise(userFind);
   }
 
-  async addUser(user: User) {
+  async addUser(user: User): Promise<User> {
     const dataUser = {
       id: generateId(),
       name: user.name,
     };
 
     await this.userModel.collection.insertOne(dataUser);
-    const users = await this.userModel.find({}, {_id: 0});
-    return wrapPromise(users);
+    //const users = await this.userModel.find({}, {_id: 0});
+    return wrapPromise(dataUser);
   }
 
   async deleteUser(id: string): Promise<User[]> {
