@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from 'src/entity/users/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -28,21 +28,23 @@ export class UsersService {
       id: generateId(),
       name: user.name,
     };
-
     await this.userModel.collection.insertOne(dataUser);
-    //const users = await this.userModel.find({}, {_id: 0});
-    return wrapPromise(dataUser);
+    const addedUser: User = {
+      id: dataUser.id,
+      name: dataUser.name,
+    };
+
+    return wrapPromise(addedUser);
   }
 
   async deleteUser(id: string): Promise<User[]> {
+    const deletedUser = await this.userModel.find({id}, {_id: 0});
     await this.userModel.collection.deleteOne({id});
-    const users = await this.userModel.find({}, {_id: 0});
-    return wrapPromise(users);
+    return wrapPromise(deletedUser);
   }
 
   async updateUser(id: string, user: User): Promise<User[]> {
     await this.userModel.collection.updateOne({id}, {$set: user});
-    const users = await this.userModel.find({}, {_id: 0});
-    return wrapPromise(users);
+    return wrapPromise(user);
   }
 }
