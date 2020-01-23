@@ -7,7 +7,6 @@ import { generateId } from '../../tools/geterate-id';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
 
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
