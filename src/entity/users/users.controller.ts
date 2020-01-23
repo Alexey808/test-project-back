@@ -23,13 +23,19 @@ export class UsersController {
     return await this.usersService.addUser(createUserDTO);
   }
 
+  @Put(':id')
+  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO) {
+    return await this.usersService.updateUser(id, updateUserDTO);
+  }
+
   @Delete()
   async deleteUser(@Query() query) {
     return await this.usersService.deleteUser(query.id);
   }
 
-  @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO) {
-    return await this.usersService.updateUser(id, updateUserDTO);
+  @Delete()
+  async deleteAllUsers() {
+    console.log('deleteAllUsers');
+    return await this.usersService.deleteAllUsers();
   }
 }

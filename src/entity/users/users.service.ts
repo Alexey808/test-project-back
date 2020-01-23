@@ -36,14 +36,20 @@ export class UsersService {
     return wrapPromise(addedUser);
   }
 
+  async updateUser(id: string, user: User): Promise<User[]> {
+    await this.userModel.collection.updateOne({id}, {$set: user});
+    return wrapPromise(user);
+  }
+
   async deleteUser(id: string): Promise<User[]> {
     const deletedUser = await this.userModel.find({id}, {_id: 0});
     await this.userModel.collection.deleteOne({id});
     return wrapPromise(deletedUser);
   }
 
-  async updateUser(id: string, user: User): Promise<User[]> {
-    await this.userModel.collection.updateOne({id}, {$set: user});
-    return wrapPromise(user);
+  async deleteAllUsers(): Promise<User[]> {
+    const result = await this.userModel.collection.drop();
+    console.log(result);
+    return wrapPromise(result);
   }
 }
