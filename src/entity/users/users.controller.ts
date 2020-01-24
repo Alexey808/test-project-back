@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Param, Query, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/create-user.dto';
+import { IUser } from './user.interface';
 
 @Controller('api/users')
 export class UsersController {
@@ -9,33 +10,31 @@ export class UsersController {
   ) {}
 
   @Get(':id')
-  async getUser(@Param('id') userId) {
+  async getUser(@Param('id') userId: string): Promise<IUser> {
     return await this.usersService.getUser(userId);
   }
 
   @Get()
-  async getUsers() {
+  async getUsers(): Promise<IUser[]> {
     return await this.usersService.getUsers();
   }
 
   @Post()
-  async addUser(@Body() createUserDTO: UserDTO) {
+  async addUser(@Body() createUserDTO: UserDTO): Promise<IUser> {
     return await this.usersService.addUser(createUserDTO);
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO) {
+  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO): Promise<IUser> {
     return await this.usersService.updateUser(id, updateUserDTO);
   }
 
   @Delete()
-  async deleteUser(@Query() query) {
-    return await this.usersService.deleteUser(query.id);
-  }
-
-  @Delete()
-  async deleteAllUsers() {
-    console.log('deleteAllUsers');
-    return await this.usersService.deleteAllUsers();
+  async deleteUser(@Query() user: IUser): Promise<IUser[]> {
+    if (user && Boolean(user.id)) {
+      return await this.usersService.deleteUser(user.id);
+    } else {
+      return await this.usersService.deleteAllUsers();
+    }
   }
 }

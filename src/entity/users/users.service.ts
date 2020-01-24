@@ -1,55 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/entity/users/user.interface';
+import { IUser } from 'src/entity/users/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { wrapPromise } from '../../tools/wrap-promise';
 import { generateId } from '../../tools/geterate-id';
 
 @Injectable()
 export class UsersService {
 
   constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('User') private readonly userModel: Model<IUser>,
   ) {}
 
-  async getUsers(): Promise<User[]> {
-    const users = await this.userModel.find({}, {_id: 0});
-    return wrapPromise(users);
+  async getUsers(): Promise<IUser[]> {
+    return this.userModel.find({}, {_id: 0});
   }
 
-  async getUser(id: string): Promise<User> {
-    const userFind = await this.userModel.findOne({id}, {_id: 0});
-    return wrapPromise(userFind);
+  async getUser(id: string): Promise<IUser> {
+    return this.userModel.findOne({id}, {_id: 0});
   }
 
-  async addUser(user: User): Promise<User> {
-    const dataUser = {
+  async addUser(user: IUser): Promise<IUser> {
+    const dataUser: IUser = {
       id: generateId(),
       name: user.name,
     };
     await this.userModel.collection.insertOne(dataUser);
-    const addedUser: User = {
+    return {
       id: dataUser.id,
       name: dataUser.name,
     };
-
-    return wrapPromise(addedUser);
   }
 
-  async updateUser(id: string, user: User): Promise<User[]> {
+  async updateUser(id: string, user: IUser): Promise<IUser> {
     await this.userModel.collection.updateOne({id}, {$set: user});
-    return wrapPromise(user);
+    return user;
   }
 
-  async deleteUser(id: string): Promise<User[]> {
-    const deletedUser = await this.userModel.find({id}, {_id: 0});
+  async deleteUser(id: string): Promise<IUser[]> {
     await this.userModel.collection.deleteOne({id});
-    return wrapPromise(deletedUser);
+    return [];
   }
 
-  async deleteAllUsers(): Promise<User[]> {
-    const result = await this.userModel.collection.drop();
-    console.log(result);
-    return wrapPromise(result);
+  async deleteAllUsers(): Promise<IUser[]> {
+    await this.userModel.deleteMany({});
+    return [];
   }
 }
