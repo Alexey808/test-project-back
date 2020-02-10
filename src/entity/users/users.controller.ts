@@ -24,9 +24,9 @@ export class UsersController {
     return await this.usersService.addUser(createUserDTO);
   }
 
-  @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDTO: UserDTO): Promise<IUser> {
-    return await this.usersService.updateUser(id, updateUserDTO);
+  @Put()
+  async updateUser(@Body() updateUserDTO: UserDTO[]): Promise<IUser[]> {
+    return await this.usersService.updateUser(updateUserDTO);
   }
 
   @Delete()
