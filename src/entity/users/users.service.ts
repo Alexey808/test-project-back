@@ -32,11 +32,9 @@ export class UsersService {
   }
 
   async updateUser(users: IUser[]): Promise<IUser[]> {
-    console.log(users);
-    debugger
-    for (let i = 0; i <= users.length; i++) {
-      await this.userModel.collection.updateUser(
-        {id: users[i].id}, {$set: users[i]},
+    for (const user of users) {
+      await this.userModel.collection.updateMany(
+        {id: user.id}, {$set: user},
       );
     }
 
